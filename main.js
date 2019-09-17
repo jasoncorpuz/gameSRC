@@ -85,7 +85,7 @@ function renderResultPage(responseJson) {
         const info = responseJson.result; // to clutter code less
         $('.game-info').empty();
         $('.game-info').append(`
-        <h3>${info.title}</h3>
+        <h2>${info.title}</h2>
             <ul>
                 <li>
                     ${info.genre}
@@ -202,7 +202,7 @@ function renderTwitch(responseJson) {
             <iframe
                 src="https://player.twitch.tv/?channel=${twitchGameID}&autoplay=false"
                 height="360px"
-                width="640px"
+                width="500px"
                 frameborder="<frameborder>"
                 scrolling="<scrolling>"
                 allowfullscreen="<allowfullscreen>"
@@ -242,8 +242,8 @@ function renderYoutube(responseJson) {
     console.log(`video id = ${videoId}`);
     $('.video-results').empty();
     $('.video-results').append(`
-    <h3>IGN Review<h3>
-    <iframe id="ytplayer" type="text/html" width="640" height="360"
+    <h3>IGN Review:<h3>
+    <iframe id="ytplayer" type="text/html" width="500s" height="360"
         src="https://www.youtube.com/embed/${videoId}?autoplay=1&origin=http://example.com"
         frameborder="0"></iframe>  
     `)

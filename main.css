@@ -33,6 +33,8 @@ input{
  
 p {
     text-align: left;
+    margin-left: auto;
+    margin-right:auto;
 }
 .init-text {
     display: block;
@@ -48,5 +50,13 @@ p {
 }
 
 img{
-    width: 640px
+    width: 75%;
+}
+
+li {
+    margin:15px
+}
+
+iframe{
+    width:75%;
 }
