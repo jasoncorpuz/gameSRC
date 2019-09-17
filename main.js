@@ -250,7 +250,7 @@ function renderYoutube(responseJson) {
 }
 
 function tryAgain() {
-    console.log('you done fucked up, search again?');
+    console.log('you done messed, search again?');
    $('.game-info').empty();
    $('.video-results').empty();
     $('.twitch-results').empty();
