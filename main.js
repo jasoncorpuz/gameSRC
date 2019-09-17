@@ -88,10 +88,10 @@ function renderResultPage(responseJson) {
         <h2>${info.title}</h2>
             <ul>
                 <li>
-                    ${info.genre}
+                    genre: ${info.genre}
                 </li>
                 <li>
-                   game score: ${info.score}
+                   metacritic review score: ${info.score}
                 </li>
                 <li>
                     publisher: ${info.publisher}
