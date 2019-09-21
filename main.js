@@ -22,12 +22,13 @@ function search() {
     //pass off to getGameList
     //clears previous results
     $('form').submit(function (event) {
-        $('.init-screen').css('display','hidden')
+        $('.init-screen').css('display', 'hidden')
         event.preventDefault()
         const query = $('.query').val();
-        const platform = $('.platform').val();
-        console.log(query, platform);
-        getGamelist(query, platform);
+        //const platform = $('.platform').val();
+        console.log(query);
+        getGames(query);
+
     })
 };
 
@@ -35,6 +36,93 @@ function formatQueryString(params) {
     const queryItems = Object.keys(params)
         .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
     return queryItems.join('&');
+}
+
+function getGames(query) {
+    let searchItem = encodeURIComponent(query)
+    fetch(`https://chicken-coop.p.rapidapi.com/games?title=${searchItem}`, {
+            "method": "GET",
+            "headers": {
+                "x-rapidapi-host": "chicken-coop.p.rapidapi.com",
+                "x-rapidapi-key": chickenKey
+            }
+        })
+        .then(response => response.json())
+        .then(responseJson => renderGameList(responseJson))
+        .catch(err => {
+            console.log(err);
+        });
+}
+
+function renderGameList(responseJson) {
+    $('.game-info').empty();
+    $('.video-results').empty();
+    $('.twitch-results').empty();
+    $('.result-img').empty();
+    $('.search-results').empty();
+    if (responseJson.result !== 'No result') {
+    console.log(responseJson.result)
+    const gameList = platformFilter(responseJson.result);
+    console.log(gameList);
+    for (let i = 0; i < gameList.length; i++) {
+            $('.search-results').append(
+                `<li class='result'>${gameList[i].title},${gameList[i].platform}</li>`
+            )
+        }
+    } else {
+        tryAgain();
+    }
+    handleClick();
+};
+
+function platformFilter(responseJson) {
+    const unfilteredList = responseJson;
+    const filteredList = unfilteredList.filter((list) => {
+        return list.platform === 'PC' ||
+        list.platform === 'XONE' ||
+        list.platform === 'Switch' ||
+        list.platform === 'PS4';
+    });
+    return filteredList;
+}
+
+function handleClick() {
+    $('.result').on('click', function (event) {
+        console.log($(this).text());
+        const innerText = $(this).text();
+        console.log(innerText);
+        getGameQuery(innerText);
+    })
+
+}
+
+function getGameQuery(innerText) {
+    const getQuery = innerText.split(',')
+    console.log(getQuery); // an array 
+    let query = getQuery[0];
+    let platformQuery = getQuery[1]
+
+    console.log(`${query} and ${platformQuery} separated`);
+    const platform = formatPlatform(platformQuery)
+    getGamelist(query, platform);
+    console.log(`${platform} worked`);
+}
+
+function formatPlatform(platformQuery){
+    console.log(platformQuery);
+    if (platformQuery === 'PC'){
+        return 'pc'
+    } else if (platformQuery === 'PS4'){
+        return 'playstation-4'
+    } else if (platformQuery === 'XONE'){
+        return 'xbox-one'
+    } else if (platformQuery === 'Switch'){
+        return 'switch'
+    } else {
+        console.log('error')
+    }
+    // this needs to return the appropriate platform/slug for the search engine
+    // search needs to be exact
 }
 
 
@@ -54,7 +142,7 @@ function getGamelist(query, platform) {
     const url = chickenUrl + queryURI + '?' + queryString
     console.log(url)
 
-    //  https://chicken-coop.p.rapidapi.com//games/league%20of%20legends%20?platform=pc
+
     fetch(url, {
             "method": "GET",
             "headers": {
@@ -69,16 +157,13 @@ function getGamelist(query, platform) {
             console.log(err); // if response = ok then
         });
 
-    /*
-     fetch(url,options)
-        .then(response => response.json())
-        .then(responseJson => renderResultPage(responseJson))
-        .catch(console.log('got me fucked up')) */
+
 
 }
 
 function renderResultPage(responseJson) {
     if (responseJson.result !== "No result") {
+        $('.search-results').empty();
         getYoutube(responseJson);
         getTwitch(responseJson);
         getImage(responseJson);
@@ -107,11 +192,11 @@ function renderResultPage(responseJson) {
     //sends query to  getTwitch, getYoutube
 }
 
-function getImage(responseJson){
+function getImage(responseJson) {
     // stores game title
     console.log(`${responseJson.result.title} get image`)
     const params = {
-        'search':responseJson.result.title
+        'search': responseJson.result.title
     }
 
     const queryString = formatQueryString(params)
@@ -119,9 +204,9 @@ function getImage(responseJson){
     console.log(url);
 
     fetch(url)
-     .then(response => response.json())
-     .then(responseJson => renderImage(responseJson));
-     
+        .then(response => response.json())
+        .then(responseJson => renderImage(responseJson));
+
 }
 
 function renderImage(responseJson) {
@@ -162,19 +247,27 @@ function getTwitchGame(game) {
                 'Client-ID': twitchKey
             }
         })
+        // if response.ok?
         .then(response => response.json())
         .then(responseJson => getGameId(responseJson))
+        //.catch(noStreamAvail())
 }
 
 function getGameId(responseJson) {
-    const gameId = responseJson.data[0].id
-    findTwitchStream(gameId);
+    console.log(responseJson.data);
+     if (responseJson.data == 0) {
+        noStreamAvail();
+     } else {
+        const gameId = responseJson.data[0].id;
+        findTwitchStream(gameId);
+    }
 }
+
 
 function findTwitchStream(gameId) {
     const params = {
         'game_id': gameId,
-        
+
     };
 
     const queryString = formatQueryString(params);
@@ -188,13 +281,23 @@ function findTwitchStream(gameId) {
             }
         })
         .then(response => response.json())
-        .then(responseJson => renderTwitch(responseJson))
+        .then(responseJson => checkAvailStreams(responseJson))
+        .catch(console.log('error'))
 };
+
+function checkAvailStreams (responseJson) {
+    console.log(responseJson)
+    if (responseJson.data == 0 ){
+        noStreamAvail();
+    } else{
+        renderTwitch(responseJson);
+    }
+}
 
 function renderTwitch(responseJson) {
     console.log(responseJson);
     // twitch returns the most viewed stream first, so 0 
-    let twitchGameID = responseJson.data[0].user_name
+    const twitchGameID = responseJson.data[0].user_name;
     console.log(`twitch game id = ${twitchGameID}`)
     $('.twitch-results').empty();
     $('.twitch-results').append(`
@@ -209,9 +312,8 @@ function renderTwitch(responseJson) {
                 
             </iframe>
     `)
+    
 }
-
-
 // fetching youtube start. this will return an IGN Review
 
 
@@ -250,17 +352,25 @@ function renderYoutube(responseJson) {
 }
 
 function tryAgain() {
-    console.log('you done messed, search again?');
-   $('.game-info').empty();
-   $('.video-results').empty();
+    console.log('you done messed up, search again?');
+    $('.game-info').empty();
+    $('.video-results').empty();
     $('.twitch-results').empty();
     $('.result-img').empty();
     $('.game-info').append(
         `<h3>Sorry we couldn't find that game. Try again?<h3>`
     )
-    
-        
+
+
     // renders try again screen
+}
+
+function noStreamAvail(){
+    $('.twitch-results').append(`
+            <h3>Live Stream:</h3>
+            <p>Sorry, no live stream available at this time!<p>
+            </iframe>
+    `)
 }
 
 function searchAgain() {

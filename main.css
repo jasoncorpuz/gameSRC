@@ -60,3 +60,11 @@ li {
 iframe{
     width:75%;
 }
+
+.result {
+    cursor: pointer;
+}
+
+.result {
+    color:blue;
+}
