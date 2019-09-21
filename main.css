@@ -68,3 +68,17 @@ iframe{
 .result {
     color:blue;
 }
+
+
+/* $color1: hsla(0%, 0%, 100%, 1);
+$color2: hsla(325%, 31%, 19%, 1);
+$color3: hsla(244%, 62%, 70%, 1);
+$color4: hsla(303%, 22%, 35%, 1);
+$color5: hsla(0%, 31%, 88%, 1);
+
+/* RGB */
+/* $color1: rgba(255, 255, 255, 1);
+$color2: rgba(65, 34, 52, 1);
+$color3: rgba(138, 132, 226, 1);
+$color4: rgba(109, 70, 107, 1);
+$color5: rgba(234, 215, 215, 1); */ 

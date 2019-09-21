@@ -105,7 +105,7 @@ function getGameQuery(innerText) {
     console.log(`${query} and ${platformQuery} separated`);
     const platform = formatPlatform(platformQuery)
     getGamelist(query, platform);
-    console.log(`${platform} worked`);
+    
 }
 
 function formatPlatform(platformQuery){
@@ -255,6 +255,7 @@ function getTwitchGame(game) {
 
 function getGameId(responseJson) {
     console.log(responseJson.data);
+    // some games don't have ID's so ~
      if (responseJson.data == 0) {
         noStreamAvail();
      } else {
