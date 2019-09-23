@@ -3,25 +3,24 @@
 <head>
     <title>gamerSrc</title>
     <link rel="stylesheet" href="main.css">
+    <link href="https://fonts.googleapis.com/css?family=Maitree|Montserrat|Overpass&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <main>
         <section class="init-screen">
-            <h1>gamerSrc</h1>
-            <div class='init-text'>thinking of buying that game? we're here to help you make that decision.</div>
+            <h1 class='gamerSRC'>/gamerSrc</h1>
+            <div class='init-text'>
+                <span id ='first-text'>thinking of buying that game?</span> 
+            
+                <span id ='last-text'>we're here to help you make that decision</span>
+             
+                
             <form>
-                <legend>find any Xbox One, PS4, Switch, or PC game...</legend>
+                <legend><span class='legend-text'> find any Xbox One, PS4, Switch, or PC game...</span></legend>
                 <fieldset>
                     <label for="input">game:</label>
                     <input type="text" placeholder="Overwatch" value='' required class='query'>
-                    <!-- <label for="select">platform:</label>
-                    <select name='platform-list' class='platform'>
-                        <option value='pc'>PC</option>
-                        <option value="playstation-4">PS4</option>
-                        <option value="xbox-one">Xbox One</option>
-                        <option value="switch">Switch</option>
-                    </select> -->
                     <button type='submit' class='search'>search</button>
                 </fieldset>
             </form>
@@ -33,12 +32,14 @@
             </ul>
         </section>
         <section class='results-screen'>
+            
             <div class='result-img'>
                 
             </div>
             <div class='game-info'>
 
             </div>
+            <div class='videos'>
             <div class='video-results'>
                 <!-- <h3>IGN Review:</h3> -->
 
@@ -59,7 +60,7 @@
                 allowfullscreen="<allowfullscreen>">
             </iframe> -->
             </div>
-
+        </div>
         </section>
 
     </main>

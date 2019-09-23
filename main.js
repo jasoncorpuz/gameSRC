@@ -59,19 +59,22 @@ function renderGameList(responseJson) {
     $('.video-results').empty();
     $('.twitch-results').empty();
     $('.result-img').empty();
+    $('.search-results').css('display','block');
     $('.search-results').empty();
+    
     if (responseJson.result !== 'No result') {
     console.log(responseJson.result)
     const gameList = platformFilter(responseJson.result);
     console.log(gameList);
     for (let i = 0; i < gameList.length; i++) {
             $('.search-results').append(
-                `<li class='result'>${gameList[i].title},${gameList[i].platform}</li>`
+                `<li class='result'>${gameList[i].title},<span class='platform'>${gameList[i].platform}<span></li>`
             )
         }
     } else {
         tryAgain();
     }
+    
     handleClick();
 };
 
@@ -163,15 +166,20 @@ function getGamelist(query, platform) {
 
 function renderResultPage(responseJson) {
     if (responseJson.result !== "No result") {
-        $('.search-results').empty();
+        
         getYoutube(responseJson);
         getTwitch(responseJson);
         getImage(responseJson);
         const info = responseJson.result; // to clutter code less
+        const description = checkDescription(info);
+        console.log(info);
+        $('.search-results').css('display','none');
         $('.game-info').empty();
         $('.game-info').append(`
-        <h2>${info.title}</h2>
-            <ul>
+        <h2 class='title'>${info.title}</h2>
+            <ul class='info-list'>
+                <li>
+                    release date: ${info.releaseDate}
                 <li>
                     genre: ${info.genre}
                 </li>
@@ -181,8 +189,10 @@ function renderResultPage(responseJson) {
                 <li>
                     publisher: ${info.publisher}
                 </li>
+              
             </ul>
-        <p>${info.description}</p>
+        <h3>Description:<h3>
+        ${description}
         `)
     } else {
         console.log('no result!');
@@ -190,7 +200,24 @@ function renderResultPage(responseJson) {
     }
     //fetches game info, description, screenshot, review
     //sends query to  getTwitch, getYoutube
+};
+
+
+function checkDescription(info) {
+// not all games have descriptions on Chicken coop, this verfies whether or not they do and returns 'no description available' if there is none.
+    if (info.description === ''){
+        plsRun();
+        return `<div class='no-descrip'> Sorry, no description available.<div>`;
+    } else {
+        return `<p>${info.description}<p>`;
+    }
+};
+
+function plsRun(){
+    console.log('this function is running');
+    
 }
+
 
 function getImage(responseJson) {
     // stores game title
@@ -215,7 +242,7 @@ function renderImage(responseJson) {
     console.log(image);
     $('.result-img').empty();
     $('.result-img').append(
-        `<img src="${image}" alt="game-image" class='screentshot'>`
+        `<img src="${image}" alt="game-image" class='screenshot'>`
     )
 }
 
@@ -369,7 +396,7 @@ function tryAgain() {
 function noStreamAvail(){
     $('.twitch-results').append(`
             <h3>Live Stream:</h3>
-            <p>Sorry, no live stream available at this time!<p>
+            <p class='livestream-message'>Sorry, no live stream available at this time!<p>
             </iframe>
     `)
 }
