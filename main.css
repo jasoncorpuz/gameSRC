@@ -100,10 +100,7 @@ img{
     position: relative;
 }
 
-.info-list{
-    float: right;
-    text-align: left;
-}
+
 
 
 li {
@@ -163,7 +160,7 @@ iframe{
 /*medium!*/
 
 @media only screen and (min-width:650px){
-    
+  
   }
   
   
@@ -176,8 +173,14 @@ iframe{
         display: flex;
         justify-content: space-evenly;
         clear:right;
+
     }
 
+    .info-list{
+        float: right;
+        text-align: left;
+    }
+    
     .video-results, .twitch-results {
         margin: 0px;
     }
