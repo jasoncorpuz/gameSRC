@@ -19,6 +19,10 @@ main {
     margin-left: auto;
 }
 
+button {
+    background-color: white;
+}
+
 .first-text, .last-text {
     text-align: center;
 }
