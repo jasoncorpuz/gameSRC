@@ -58,6 +58,7 @@ input {
 
 legend {
     margin-bottom: 10px;
+    width:100%;
 }
 
 .search {

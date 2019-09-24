@@ -303,7 +303,7 @@ function renderYoutube(responseJson) {
     $('.video-results').append(`
     <h3>IGN Review:<h3>
     <iframe id="ytplayer" type="text/html" width="500s" height="360"
-        src="https://www.youtube.com/embed/${videoId}?autoplay=1&origin=http://example.com"
+        src="https://www.youtube.com/embed/${videoId}?autoplay=0&origin=http://example.com"
         frameborder="0"></iframe>  
     `)
 };
