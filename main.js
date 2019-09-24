@@ -266,6 +266,7 @@ function renderTwitch(responseJson) {
                 frameborder="<frameborder>"
                 scrolling="<scrolling>"
                 allowfullscreen="<allowfullscreen>"
+                title="Live-Stream"
                 
             </iframe>
     `) 
@@ -302,7 +303,7 @@ function renderYoutube(responseJson) {
     $('.video-results').empty();
     $('.video-results').append(`
     <h3>IGN Review:<h3>
-    <iframe id="ytplayer" type="text/html" width="500s" height="360"
+    <iframe id="ytplayer" type="text/html" width="500s" height="360" title ="IGN-Review"
         src="https://www.youtube.com/embed/${videoId}?autoplay=0&origin=http://example.com"
         frameborder="0"></iframe>  
     `)
