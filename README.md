@@ -1,4 +1,4 @@
-# gameSRC
+# gamerSRC
 https://jasoncorpuz.github.io/gameSRC/
 
 A website that aggregates a game's information, a review, and a live stream based on a user search.
