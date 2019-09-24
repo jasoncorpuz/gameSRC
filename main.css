@@ -1,56 +1,54 @@
-
-
-/* font-family: 'Montserrat', sans-serif;
-font-family: 'Maitree', serif;
-font-family: 'Overpass', sans-serif;
- */
-
 * {
     box-sizing: border-box;
-    margin:0;
-    padding:0;
+    margin: 0;
+    padding: 0;
     list-style: none;
 }
 
-
-
 html {
-    background-color:BACDB0;
+    background-color: BACDB0;
 }
 
 main {
     font-family: 'Overpass', sans-serif;
     background-color: white;
     border: 1px solid white;
-    border-radius: 10%;
+    border-radius: 8%;
     max-width: 1200px;
     margin-right: auto;
     margin-left: auto;
 }
 
-h1, h2, h3{
+.first-text, .last-text {
+    text-align: center;
+}
+
+
+h1,h2,h3 {
     font-family: 'Maitree', serif;
 
 }
-h1{
+
+h1 {
     text-align: center;
     margin: 20px;
 }
 
-h3{
-    margin-bottom:10px;
+h3 {
+    margin-bottom: 10px;
     font-weight: 600px;
 }
-fieldset{
-    border:none;
+
+fieldset {
+    border: none;
     margin-bottom: 10px;
 }
 
-form{
+form {
     text-align: center
 }
 
-input{
+input {
     margin-left: 10px;
     width: 200px;
     height: 40px;
@@ -61,7 +59,8 @@ input{
 legend {
     margin-bottom: 10px;
 }
-.search{
+
+.search {
     width: 100px;
     height: 40px;
     font-size: inherit;
@@ -71,15 +70,17 @@ legend {
 .results-screen {
     text-align: center;
 }
- 
+
 p {
     text-align: left;
     margin-left: auto;
-    margin-right:auto;
-    font-size: 20px;
+    margin-right: auto;
+    font-size: 16px;
+    line-height: 22px;
     width: 85%;
-   
+
 }
+
 .init-text {
     display: block;
     text-align: center;
@@ -89,33 +90,35 @@ p {
     margin: 20px;
 }
 
-.game-info{
-    margin:20px;
+.game-info {
+    margin: 20px;
     text-align: center;
 }
 
-img{
-    width: 75%;
+img {
+    width: 70%;
+    height: auto;
     opacity: 0.9;
-    position: relative;
+    border: 1px solid grey;
 }
 
 
 
 
 li {
-    margin:10px;
+    margin: 10px;
     font-family: 'Montserrat', sans-serif;
     text-align: center;
     font-size: 16px;
 }
 
-iframe{
-    width: 80%;
-    border-radius:5%;
+iframe {
+    width: 100%;
+    height: 35%;
+    border-radius: 5%;
 }
 
-.gamerSRC{
+.gamerSRC {
     font-weight: 800;
     font-size: 45px;
 }
@@ -123,10 +126,14 @@ iframe{
 
 .result {
     cursor: pointer;
+    border: none;
+    font-size: 18px;
+    color: blue;
 }
 
-.result {
-    color:blue;
+.result:hover {
+    color: rgb(65, 171, 206);
+    font-size: 20px;
 }
 
 .platform {
@@ -134,86 +141,78 @@ iframe{
     font-weight: 300;
 }
 
-.title{
+.title {
     font-weight: 700;
-    font-size:30px;
-    margin-bottom:14px;
+    font-size: 30px;
+    margin-bottom: 14px;
 }
 
-.search-results{
-    animation: 2s ease-out 0s 1 slideInFromLeft;
-    /* background: #333; */
-    padding: 30px;
-    text-align: center
-}
-
-.livestream-message{
+.livestream-message {
     text-align: center;
 }
 
-.legend-text{
+.legend-text {
     font-style: italic;
 }
 
+.info-list {
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: BACDB0;
+    margin-bottom: 10px;
+}
 
+@media only screen and (min-width:650px) {
+    main {
+        font-size: 20px;
+    }
 
-/*medium!*/
+    p {
+        line-height: 24px;
 
-@media only screen and (min-width:650px){
-  
-  }
-  
-  
-  
-  
-  /*large!*/
-  @media only screen and (min-width: 992px){
-    .videos{
+    }
+}
+
+@media only screen and (min-width: 992px) {
+    .videos {
         margin-top: 75px;
         display: flex;
         justify-content: space-evenly;
-        clear:right;
+        clear: right;
 
     }
 
-    .info-list{
+    .info-list {
         float: right;
         text-align: left;
     }
-    
-    .video-results, .twitch-results {
+
+    .video-results,
+    .twitch-results {
         margin: 0px;
     }
 
-    .screenshot{
-        height: 80%;
-        width: 90%;
-    }
-    iframe{
-       min-width: 450px;
-       max-width: 600px;
+    .screenshot {
+        height: 60%;
+        width: 80%;
     }
 
-    main{
+    iframe {
+        min-width: 450px;
+        max-width: 600px;
+        min-height: 300px;
+    }
+
+    main {
         min-height: 800px;
     }
 
-    li{
+    li {
         text-align: left;
     }
-  
-  }
 
+    .videos {
+        height: 400px;
+    }
 
-/* $color1: hsla(0%, 0%, 100%, 1); white
-$color2: hsla(325%, 31%, 19%, 1); dark purple
-$color3: hsla(244%, 62%, 70%, 1); bright purple
-$color4: hsla(303%, 22%, 35%, 1); deep purple
-$color5: hsla(0%, 31%, 88%, 1);
-
-/* RGB */
-/* $color1: rgba(255, 255, 255, 1);
-$color2: rgba(65, 34, 52, 1);
-$color3: rgba(138, 132, 226, 1);
-$color4: rgba(109, 70, 107, 1);
-$color5: rgba(234, 215, 215, 1); */
+}

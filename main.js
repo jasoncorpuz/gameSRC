@@ -1,13 +1,3 @@
-/* ON a search querey, a result should be returned if a game is inputted correctly
-The search will access Chicken Coop's data base, and retreive The game name, 
-screenshot, description and rating
-The result screen will also show two youtube reviews
-and the most active twitch stream
-on incorrect input, the user will be sent to a screen where 
-they are prompted to search again, which runs the initial search screen
-
-*/
-
 const chickenUrl = 'https://chicken-coop.p.rapidapi.com//games/';
 const chickenKey = 'faf2bced7dmsh381fd01602a86d5p17d974jsn8b85a7c7cac6'; // 'x-rapidapi-key'
 const twitchUrl = 'https://api.twitch.tv/helix/games/'; // 'Client-ID'
@@ -17,16 +7,10 @@ const youtubeKey = 'AIzaSyD1fkk494aFEcA2w2DchMDe2PRI7dB0s2g'; //'key' in params
 const rawgUrl = 'https://api.rawg.io/api/games'
 
 function search() {
-    console.log('search working')
-    //get values from search and return them as variables
-    //pass off to getGameList
-    //clears previous results
     $('form').submit(function (event) {
         $('.init-screen').css('display', 'hidden')
         event.preventDefault()
         const query = $('.query').val();
-        //const platform = $('.platform').val();
-        console.log(query);
         getGames(query);
 
     })
@@ -48,10 +32,7 @@ function getGames(query) {
             }
         })
         .then(response => response.json())
-        .then(responseJson => renderGameList(responseJson))
-        .catch(err => {
-            console.log(err);
-        });
+        .then(responseJson => renderGameList(responseJson));
 }
 
 function renderGameList(responseJson) {
@@ -63,12 +44,11 @@ function renderGameList(responseJson) {
     $('.search-results').empty();
     
     if (responseJson.result !== 'No result') {
-    console.log(responseJson.result)
     const gameList = platformFilter(responseJson.result);
-    console.log(gameList);
     for (let i = 0; i < gameList.length; i++) {
             $('.search-results').append(
-                `<li class='result'>${gameList[i].title},<span class='platform'>${gameList[i].platform}<span></li>`
+                `<li><button class='result'>${gameList[i].title},<span class='platform'>${gameList[i].platform}</button><span></li>` 
+                //button for tab access
             )
         }
     } else {
@@ -91,28 +71,22 @@ function platformFilter(responseJson) {
 
 function handleClick() {
     $('.result').on('click', function (event) {
-        console.log($(this).text());
         const innerText = $(this).text();
-        console.log(innerText);
         getGameQuery(innerText);
     })
 
 }
 
 function getGameQuery(innerText) {
-    const getQuery = innerText.split(',')
-    console.log(getQuery); // an array 
-    let query = getQuery[0];
-    let platformQuery = getQuery[1]
-
-    console.log(`${query} and ${platformQuery} separated`);
+    // this code accounts for any commas found in the title, as the platform will come after the last comma
+    const lastIndex = innerText.lastIndexOf(',');
+    const query = innerText.substring(0, lastIndex);
+    const platformQuery = innerText.substring(lastIndex + 1);
     const platform = formatPlatform(platformQuery)
     getGamelist(query, platform);
-    
 }
 
 function formatPlatform(platformQuery){
-    console.log(platformQuery);
     if (platformQuery === 'PC'){
         return 'pc'
     } else if (platformQuery === 'PS4'){
@@ -131,10 +105,7 @@ function formatPlatform(platformQuery){
 
 
 function getGamelist(query, platform) {
-    console.log(`${query} ${platform} passed to get gamelist`)
-    // passes query to Chicken Coop
-    // returns most relevent JSON information in list of 10
-    // when they click the game, pass query to renderResultPage
+    // passes query to Chicken Coop gaming database
     const params = {
         'platform': platform
 
@@ -143,9 +114,7 @@ function getGamelist(query, platform) {
     const queryString = formatQueryString(params);
     const queryURI = encodeURIComponent(query);
     const url = chickenUrl + queryURI + '?' + queryString
-    console.log(url)
-
-
+    
     fetch(url, {
             "method": "GET",
             "headers": {
@@ -154,40 +123,31 @@ function getGamelist(query, platform) {
             }
         })
         .then(response => response.json())
-        //.then(responseJson => console.log(responseJson))
         .then(responseJson => renderResultPage(responseJson))
-        .catch(err => {
-            console.log(err); // if response = ok then
-        });
-
-
-
 }
 
 function renderResultPage(responseJson) {
     if (responseJson.result !== "No result") {
-        
         getYoutube(responseJson);
         getTwitch(responseJson);
         getImage(responseJson);
         const info = responseJson.result; // to clutter code less
         const description = checkDescription(info);
-        console.log(info);
         $('.search-results').css('display','none');
         $('.game-info').empty();
         $('.game-info').append(`
         <h2 class='title'>${info.title}</h2>
             <ul class='info-list'>
                 <li>
-                    release date: ${info.releaseDate}
+                    <h3>release date:</h3> ${info.releaseDate}
                 <li>
-                    genre: ${info.genre}
+                    <h3>genre:</h3> ${info.genre}
                 </li>
                 <li>
-                   metacritic review score: ${info.score}
+                  <h3> metacritic review score:</h3> ${info.score}
                 </li>
                 <li>
-                    publisher: ${info.publisher}
+                    <h3>publisher:</h3> ${info.publisher}
                 </li>
               
             </ul>
@@ -195,41 +155,30 @@ function renderResultPage(responseJson) {
         ${description}
         `)
     } else {
-        console.log('no result!');
         tryAgain();
     }
-    //fetches game info, description, screenshot, review
-    //sends query to  getTwitch, getYoutube
 };
 
 
 function checkDescription(info) {
-// not all games have descriptions on Chicken coop, this verfies whether or not they do and returns 'no description available' if there is none.
     if (info.description === ''){
-        plsRun();
         return `<div class='no-descrip'> Sorry, no description available.<div>`;
     } else {
         return `<p>${info.description}<p>`;
     }
 };
 
-function plsRun(){
-    console.log('this function is running');
-    
-}
+
 
 
 function getImage(responseJson) {
-    // stores game title
-    console.log(`${responseJson.result.title} get image`)
     const params = {
         'search': responseJson.result.title
     }
 
     const queryString = formatQueryString(params)
     const url = rawgUrl + '?' + queryString
-    console.log(url);
-
+    
     fetch(url)
         .then(response => response.json())
         .then(responseJson => renderImage(responseJson));
@@ -237,51 +186,36 @@ function getImage(responseJson) {
 }
 
 function renderImage(responseJson) {
-    console.log('render image working')
     const image = responseJson.results[0].background_image;
-    console.log(image);
     $('.result-img').empty();
     $('.result-img').append(
         `<img src="${image}" alt="game-image" class='screenshot'>`
     )
 }
 
-
-// the twitch api is finnicky to get around. i had to find the game's ID,
-// then use the game ID to search for the stream. 
-// from there i obtained a channel name to render the twitch stream
-
+// had to search for game and retrieve game ID. From there a stream is found and rendered. 
 function getTwitch(responseJson) {
-    //fetches most relevant twitch live and embeds video
-    //appends to video section
-    console.log(`get twitch ${responseJson.result.title}`)
     let game = (responseJson.result.title)
     getTwitchGame(game);
 }
 
 function getTwitchGame(game) {
     // retrieves attribute GAME ID
-    console.log(`get game ID ${game}`);
     const params = {
         'name': game
     }
-
     const queryString = formatQueryString(params);
     const url = twitchUrl + '?' + queryString
-    console.log(url);
     fetch(url, {
             'headers': {
                 'Client-ID': twitchKey
             }
         })
-        // if response.ok?
         .then(response => response.json())
         .then(responseJson => getGameId(responseJson))
-        //.catch(noStreamAvail())
 }
 
 function getGameId(responseJson) {
-    console.log(responseJson.data);
     // some games don't have ID's so ~
      if (responseJson.data == 0) {
         noStreamAvail();
@@ -301,7 +235,6 @@ function findTwitchStream(gameId) {
     const queryString = formatQueryString(params);
     const streamUrl = 'https://api.twitch.tv/helix/streams';
     const url = streamUrl + '?' + queryString;
-    console.log(url);
 
     fetch(url, {
             'headers': {
@@ -310,23 +243,19 @@ function findTwitchStream(gameId) {
         })
         .then(response => response.json())
         .then(responseJson => checkAvailStreams(responseJson))
-        .catch(console.log('error'))
 };
 
 function checkAvailStreams (responseJson) {
-    console.log(responseJson)
     if (responseJson.data == 0 ){
         noStreamAvail();
-    } else{
+    } else {
         renderTwitch(responseJson);
     }
-}
+};
 
 function renderTwitch(responseJson) {
-    console.log(responseJson);
     // twitch returns the most viewed stream first, so 0 
     const twitchGameID = responseJson.data[0].user_name;
-    console.log(`twitch game id = ${twitchGameID}`)
     $('.twitch-results').empty();
     $('.twitch-results').append(`
             <h3>Live Stream:</h3>
@@ -339,37 +268,37 @@ function renderTwitch(responseJson) {
                 allowfullscreen="<allowfullscreen>"
                 
             </iframe>
+    `) 
+};
+
+function noStreamAvail(){
+    $('.twitch-results').empty();
+    $('.twitch-results').append(`
+            <h3>Live Stream:</h3>
+            <p class='livestream-message'>Sorry, no live stream available at this time!<p>
+            </iframe>
     `)
-    
-}
+};
+
 // fetching youtube start. this will return an IGN Review
-
-
 function getYoutube(responseJson) {
-    console.log(`get youtube ${responseJson.result.title}`)
     const params = {
         'part': 'snippet',
         'q': `${responseJson.result.title} ign review`,
         'key': youtubeKey,
         'maxResults': 1
-    }
+    };
 
     const queryString = formatQueryString(params);
-    const url = youtubeUrl + '?' + queryString
-    console.log(url);
+    const url = youtubeUrl + '?' + queryString;
 
     fetch(url)
         .then(response => response.json())
         .then(responseJson => renderYoutube(responseJson))
-    // .catch(tryAgain())
-    //fetches ign review video ID
-    //appends to video section 
-    //appends to video section
 }
 
 function renderYoutube(responseJson) {
     const videoId = responseJson.items[0].id.videoId;
-    console.log(`video id = ${videoId}`);
     $('.video-results').empty();
     $('.video-results').append(`
     <h3>IGN Review:<h3>
@@ -377,10 +306,9 @@ function renderYoutube(responseJson) {
         src="https://www.youtube.com/embed/${videoId}?autoplay=1&origin=http://example.com"
         frameborder="0"></iframe>  
     `)
-}
+};
 
 function tryAgain() {
-    console.log('you done messed up, search again?');
     $('.game-info').empty();
     $('.video-results').empty();
     $('.twitch-results').empty();
@@ -388,22 +316,9 @@ function tryAgain() {
     $('.game-info').append(
         `<h3>Sorry we couldn't find that game. Try again?<h3>`
     )
+};
 
 
-    // renders try again screen
-}
-
-function noStreamAvail(){
-    $('.twitch-results').append(`
-            <h3>Live Stream:</h3>
-            <p class='livestream-message'>Sorry, no live stream available at this time!<p>
-            </iframe>
-    `)
-}
-
-function searchAgain() {
-    // on button click, renders the original search screen
-}
 
 
 function callApp() {
@@ -416,6 +331,3 @@ $(callApp);
 
 
 
-
-// to-do:
-// format
