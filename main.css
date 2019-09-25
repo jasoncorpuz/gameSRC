@@ -190,6 +190,7 @@ iframe {
     .info-list {
         float: right;
         text-align: left;
+        margin-left: 20px;
     }
 
     .video-results,
